@@ -23,7 +23,7 @@ Any invalid input will throw an ArgumentException from the validator that will b
 
 ****
 C) I would create 
-					1.- a table with the subnet especification and a id as PK
+					1.- a table with the subnet Network addres in CIDR notation and a id as PK 
 					2.- other table with the generated IP Address, the subnet table ID (as FK) and here you could add data as for exaple if tha address is in use, by who, since when, etc
 
 					3.- if we need we could add other table with the custumer/center data and have a FK to this table from the subnet table in order to keep track of every subnet in multiple customers/centers (not included in the statement)
