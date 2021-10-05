@@ -39,20 +39,21 @@ namespace IPGenerator.Library
                 lastIP[i] = (byte)(ipInBytes[i] | ~maskInBytes[i]);
             }
 
-            //Convert the first and last ip addresses in bites to uInt in so i can increment by 1
-            uint sIP = BitConverter.ToUInt32(firstIP.Reverse().ToArray(), 0);
-            uint eIP = BitConverter.ToUInt32(lastIP.Reverse().ToArray(), 0);
+            //Convert the first and last ip addresses in bites to uInt so i can increment by 1
+            uint startIPValue = BitConverter.ToUInt32(firstIP.Reverse().ToArray(), 0);
+            uint endIPValue = BitConverter.ToUInt32(lastIP.Reverse().ToArray(), 0);
 
             // remove first and last addresses since that are broadcast & network that should be explicitly removeved
-            sIP++; 
-            eIP--;
+            startIPValue++; 
+            endIPValue--;
 
             var output = new List<string>();
 
-            while (sIP <= eIP)
+            //keep adding 1 to the int of the startIP, converting the int to the IP represented and adding it to the result list.
+            while (startIPValue <= endIPValue)
             {
-                output.Add(new IPAddress(RevertUintBytes(sIP)).ToString());
-                sIP++;
+                output.Add(new IPAddress(RevertUintBytes(startIPValue)).ToString());
+                startIPValue++;
             }
 
             return output;
@@ -85,8 +86,13 @@ namespace IPGenerator.Library
                 throw new ArgumentException("The first part of the argument is not a valid IP address");
             }
 
-            var AddressClass = Convert.ToString(ipInput.GetAddressBytes()[0], toBase: 2).Substring(0,2);
+            if (ipInput.GetAddressBytes()[0].ToString().Equals("127"))
+            {
+                throw new ArgumentException("Loopback is not a valid input");
+            }
 
+
+            var AddressClass = Convert.ToString(ipInput.GetAddressBytes()[0], toBase: 2).PadLeft(8, '0').Substring(0,2);
 
             //If the IpAddress begins with "0" is Class A and by definition in the excercise is not allowed
             if (AddressClass.StartsWith("0"))

@@ -10,35 +10,35 @@ namespace TestConsoleApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-
-            Console.WriteLine("Insert your Netowor IP in CIDR notation and press Enter");
-            var input = Console.ReadLine();
-            Console.WriteLine("");
-            
-            IEnumerable<string> Result = new List<string>();
-            try
+            while (true)
             {
-                Result = Generator.Generate(input);
+                Console.WriteLine("Insert your Netowor IP in CIDR notation and press Enter");
+                var input = Console.ReadLine();
+                Console.WriteLine("");
 
-                foreach (var ipAddress in Result)
+                IEnumerable<string> Result = new List<string>();
+                try
                 {
-                    Console.WriteLine(ipAddress);
+                    Result = Generator.Generate(input);
+
+                    foreach (var ipAddress in Result)
+                    {
+                        Console.WriteLine($"   {ipAddress}");
+                    }
+
+                    Console.WriteLine("");
+                    Console.WriteLine($"   {Result.Count()} valid IPs on CIDR");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"   {ex.Message}");
                 }
 
                 Console.WriteLine("");
-                Console.WriteLine($"{Result.Count()} valid IPs on CIDR");
+                
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            Console.WriteLine("");
-            Console.WriteLine("Press any key to exit");
-            Console.Read();
-            
 
         }
     }
