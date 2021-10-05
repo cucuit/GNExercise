@@ -85,9 +85,31 @@ namespace IPGenerator.Library
                 throw new ArgumentException("The first part of the argument is not a valid IP address");
             }
 
-            if (cidr < 9 || cidr > 30)
+            var AddressClass = Convert.ToString(ipInput.GetAddressBytes()[0], toBase: 2).Substring(0,2);
+
+
+            //If the IpAddress begins with "0" is Class A and by definition in the excercise is not allowed
+            if (AddressClass.StartsWith("0"))
             {
-                throw new ArgumentException("The CIDR suffix is out of range");
+                throw new ArgumentException("The Class A IP are not supported");
+            }
+
+            //If the IpAddress begins with "10" is Class C and suffix should be bettwen 16 and 30
+            if (AddressClass.StartsWith("10"))
+            {
+                if (cidr < 16 || cidr > 30)
+                {
+                    throw new ArgumentException("The CIDR suffix is out of range for Class B Addresses (Should be between 16 and 30)");
+                }
+            }
+
+            //If the IpAddress begins with "11" is Class C and suffix should be bettwen 24 and 30
+            if (AddressClass.StartsWith("11"))
+            {
+                if (cidr < 24 || cidr > 30)
+                {
+                    throw new ArgumentException("The CIDR suffix is out of range for Class C Addresses (Should be between 24 and 30)");
+                }
             }
         }
 
